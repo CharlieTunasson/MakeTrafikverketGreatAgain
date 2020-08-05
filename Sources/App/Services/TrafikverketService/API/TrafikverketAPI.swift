@@ -5,6 +5,9 @@
 //  Created by Charlie Tuna on 2020-08-05.
 //
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 import Foundation
 
 final class TrafikverketAPI {
