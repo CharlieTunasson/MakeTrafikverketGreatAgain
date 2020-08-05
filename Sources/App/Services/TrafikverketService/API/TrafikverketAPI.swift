@@ -89,7 +89,7 @@ final class TrafikverketAPI {
                                          completion: @escaping (Result<[Occasion], Error>) -> Void) {
         do {
             try fetch(with: RequestModel(bookingSession: BookingSession(socialSecurityNumber: ssn),
-                                         occasionBundleQuery: OccasionBundleQuery(locationId: locationId, startDate: startDateString))) { [weak self] result in
+                                         occasionBundleQuery: OccasionBundleQuery(locationId: locationId, startDate: startDateString))) { result in
                                             completion(result)
             }
         } catch {
