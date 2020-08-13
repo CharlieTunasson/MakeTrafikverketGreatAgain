@@ -28,7 +28,7 @@ extension TrafikverketAPI {
     }
     struct OccasionBundleQuery: Codable {
         let examinationTypeId: Int = 3
-        let languageId: Int = 4
+        let languageId: Int
         let locationId: Int
         let occasionChoiceId: Int = 1
         let startDate: String // Format -> "2020-07-31T22:00:00.000Z"

@@ -35,9 +35,11 @@ final class TrafikverketService {
 
     func getAllOccasions(for ssn: String,
                          dateThreshold: TrafikverketAPI.DateThreshold,
+                         language: Language,
                          completion: @escaping (Result<[TrafikverketAPI.Occasion], Error>) -> Void) {
         api = TrafikverketAPI(dateThreshold: dateThreshold)
         api.getAllOccasions(ssn: ssn,
+                            languageId: language.rawValue,
                             locationIds: locations.map({ $0.rawValue }),
                             startDateString: dateStringNow) { result in
                                 completion(result)
@@ -102,5 +104,25 @@ extension TrafikverketService {
         case borlange = 1000324
         case jarfalla = 1000326
         case norrkoping = 1000329
+    }
+
+    enum Language: Int {
+        case albanska  = 1
+        case arabiska = 2
+        case engelska = 4
+        case finska = 5
+        case franska = 6
+        case persiska = 7
+        case ryska = 8
+        case sorani = 9
+        case spanska = 10
+        case turkiska = 11
+        case tyska = 12
+        case svenska = 13
+        case bosniska = 14
+        case kroatiska = 15
+        case serbiska = 16
+        case somaliska = 128
+        case thailändska = 133
     }
 }

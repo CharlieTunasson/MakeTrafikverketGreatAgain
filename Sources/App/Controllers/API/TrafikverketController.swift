@@ -20,7 +20,7 @@ extension TrafikverketController {
     func getOccasions(_ req: Request) throws -> EventLoopFuture<[TrafikverketAPI.Occasion]> {
         let ssn = req.parameters.get("ssn")!
         let promise = req.eventLoop.makePromise(of: [TrafikverketAPI.Occasion].self)
-        service.getAllOccasions(for: ssn, dateThreshold: .fortyFiveDays) { result in
+        service.getAllOccasions(for: ssn, dateThreshold: .fortyFiveDays, language: .engelska) { result in
             switch result {
             case .success(let occasions):
                 promise.succeed(occasions)

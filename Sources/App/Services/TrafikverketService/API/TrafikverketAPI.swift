@@ -55,12 +55,13 @@ final class TrafikverketAPI {
     // MARK: - Public operations
 
     func getAllOccasions(ssn: String,
+                         languageId: Int,
                          locationIds: [Int],
                          startDateString: String,
                          completion: @escaping (Result<[Occasion], Error>) -> Void) {
 
         locationIds.forEach { locationId in
-            getOccasionsForLocation(ssn: ssn, locationId: locationId, startDateString: startDateString) { [weak self] result in
+            getOccasionsForLocation(ssn: ssn, languageId: languageId, locationId: locationId, startDateString: startDateString) { [weak self] result in
                 guard let self = self else { return }
                 self.counter = self.counter + 1
                 switch result {
@@ -87,12 +88,13 @@ final class TrafikverketAPI {
     // MARK: - Private operations
 
     private func getOccasionsForLocation(ssn: String,
+                                         languageId: Int,
                                          locationId: Int,
                                          startDateString: String,
                                          completion: @escaping (Result<[Occasion], Error>) -> Void) {
         do {
             try fetch(with: RequestModel(bookingSession: BookingSession(socialSecurityNumber: ssn),
-                                         occasionBundleQuery: OccasionBundleQuery(locationId: locationId, startDate: startDateString))) { result in
+                                         occasionBundleQuery: OccasionBundleQuery(languageId: languageId, locationId: locationId, startDate: startDateString))) { result in
                                             completion(result)
             }
         } catch {
