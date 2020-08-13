@@ -7,21 +7,21 @@
 
 import Vapor
 
-fileprivate let service = TrafikverketService(for: [.karlskrona])
+fileprivate let service = TrafikverketService()
 
 final class TrafikverketController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        routes.get("tests", ":ssn", use: getOccasions)
-        routes.get("tests", use: get)
+        routes.post("tests", use: getOccasions)
+        routes.get("tests", "healthCheck", use: healthCheck)
     }
 }
 
 extension TrafikverketController {
     func getOccasions(_ req: Request) throws -> EventLoopFuture<[TrafikverketAPI.Occasion]> {
-        let ssn = req.parameters.get("ssn")!
+        let body = try req.content.decode(TrafikverketAPI.Body.self)
         let promise = req.eventLoop.makePromise(of: [TrafikverketAPI.Occasion].self)
-        service.getAllOccasions(for: ssn, dateThreshold: .fortyFiveDays, language: .engelska) { result in
-            switch result {
+        service.getAllOccasions(for: body) { result in
+                        switch result {
             case .success(let occasions):
                 promise.succeed(occasions)
             case .failure:
@@ -31,7 +31,7 @@ extension TrafikverketController {
         return promise.futureResult
     }
 
-    func get(_ req: Request) throws -> String {
-        return "test"
+    func healthCheck(_ req: Request) throws -> String {
+        return "OK"
     }
 }

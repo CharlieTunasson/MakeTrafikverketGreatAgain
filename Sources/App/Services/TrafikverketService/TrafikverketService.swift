@@ -9,42 +9,29 @@ import Foundation
 
 final class TrafikverketService {
 
+    typealias resultHandler = (Result<[TrafikverketAPI.Occasion], Error>) -> Void
+
     // MARK: - Properties
 
-    private let dateFormatter: DateFormatter = {
-         let dateFormatter = DateFormatter()
-         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-         return dateFormatter
-     }()
-
-    var api: TrafikverketAPI!    
-
-    private var dateStringNow: String {
-        dateFormatter.string(from: Date())
-    }
-
-    var locations: [Location] = []
-
-    // MARK: - Init
-
-    init(for locations: [Location]) {
-        self.locations = locations
-    }
+    var api: TrafikverketAPI!
 
     // MARK: - Public operations
 
-    func getAllOccasions(for ssn: String,
-                         dateThreshold: TrafikverketAPI.DateThreshold,
-                         language: Language,
-                         completion: @escaping (Result<[TrafikverketAPI.Occasion], Error>) -> Void) {
-        api = TrafikverketAPI(dateThreshold: dateThreshold)
-        api.getAllOccasions(ssn: ssn,
-                            languageId: language.rawValue,
-                            locationIds: locations.map({ $0.rawValue }),
-                            startDateString: dateStringNow) { result in
-                                completion(result)
+    func getAllOccasions(for body: TrafikverketAPI.Body, completion: @escaping resultHandler) {
+        guard let dateThreshold = TrafikverketAPI.DateThreshold(rawValue: body.dateThreshold) else {
+            completion(.failure(TrafikverketAPI.TrafikverketAPIError.noData))
+            return
         }
-    }    
+        api = TrafikverketAPI(dateThreshold: dateThreshold)
+        api.getAllLocations(for: body.ssn,
+                            languageId: body.languageId,
+                            locationIds: body.locationIds,
+                            licenceId: body.licenceId,
+                            examinationTypeId: body.examinationTypeId,
+                            startDate: body.startDate) { result in
+            completion(result)
+        }
+    }
 }
 
 // MARK: - Locations

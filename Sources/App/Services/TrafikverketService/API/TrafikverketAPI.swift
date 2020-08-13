@@ -54,14 +54,20 @@ final class TrafikverketAPI {
 
     // MARK: - Public operations
 
-    func getAllOccasions(ssn: String,
+    func getAllLocations(for ssn: String,
                          languageId: Int,
                          locationIds: [Int],
-                         startDateString: String,
+                         licenceId: Int,
+                         examinationTypeId: Int,
+                         startDate: String,
                          completion: @escaping (Result<[Occasion], Error>) -> Void) {
-
         locationIds.forEach { locationId in
-            getOccasionsForLocation(ssn: ssn, languageId: languageId, locationId: locationId, startDateString: startDateString) { [weak self] result in
+            getOccasionsForLocation(ssn: ssn,
+                                    languageId: languageId,
+                                    locationId: locationId,
+                                    startDateString: startDate,
+                                    licenceId: licenceId,
+                                    examinationTypeId: examinationTypeId) { [weak self] result in
                 guard let self = self else { return }
                 self.counter = self.counter + 1
                 switch result {
@@ -91,10 +97,15 @@ final class TrafikverketAPI {
                                          languageId: Int,
                                          locationId: Int,
                                          startDateString: String,
+                                         licenceId: Int,
+                                         examinationTypeId: Int,
                                          completion: @escaping (Result<[Occasion], Error>) -> Void) {
         do {
-            try fetch(with: RequestModel(bookingSession: BookingSession(socialSecurityNumber: ssn),
-                                         occasionBundleQuery: OccasionBundleQuery(languageId: languageId, locationId: locationId, startDate: startDateString))) { result in
+            try fetch(with: RequestModel(bookingSession: BookingSession(licenceId: licenceId, socialSecurityNumber: ssn),
+                                         occasionBundleQuery: OccasionBundleQuery(examinationTypeId: examinationTypeId,
+                                                                                  languageId: languageId,
+                                                                                  locationId: locationId,
+                                                                                  startDate: startDateString))) { result in
                                             completion(result)
             }
         } catch {

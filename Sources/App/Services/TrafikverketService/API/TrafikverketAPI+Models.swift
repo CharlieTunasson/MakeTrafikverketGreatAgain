@@ -9,6 +9,21 @@ import Foundation
 import Vapor
 
 extension TrafikverketAPI {
+
+    // MARK: - Incoming
+
+    struct Body: Content {
+        let ssn: String
+        let languageId: Int
+        let locationIds: [Int]
+        let licenceId: Int
+        let examinationTypeId: Int
+        let startDate: String
+        let dateThreshold: Int
+    }
+
+    // MARK: - Outgoing
+
     struct RequestModel: Codable {
         let bookingSession: BookingSession
         let occasionBundleQuery: OccasionBundleQuery
@@ -19,7 +34,7 @@ extension TrafikverketAPI {
         let excludeExaminationCategories: [Int] = []
         let ignoreBookingHindrance: Bool = false
         let ignoreDebt: Bool = false
-        let licenceId: Int = 5
+        let licenceId: Int
         let paymentIsActive: Bool = false
         let paymentReference: String? = nil
         let paymentUrl: String? = nil
@@ -27,7 +42,7 @@ extension TrafikverketAPI {
         let socialSecurityNumber: String
     }
     struct OccasionBundleQuery: Codable {
-        let examinationTypeId: Int = 3
+        let examinationTypeId: Int
         let languageId: Int
         let locationId: Int
         let occasionChoiceId: Int = 1
